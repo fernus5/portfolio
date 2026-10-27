@@ -480,4 +480,69 @@ elif st.session_state.aktualna_zakladka == TAB_ZBIORNIK:
         st.markdown("""
         Szczegółowy opis konfiguracji parametrów w lewym panelu bocznym aplikacji:
         
-        **1. Parametry geometry
+        **1. Parametry geometryczne zbiornika**  
+        Wprowadź zewnętrzne gabaryty, grubość ścian i dna oraz ciężar objętościowy betonu konstrukcyjnego.
+        
+        **2. Zagłębienie i Naziom**  
+        Zdefiniuj grubość warstwy gruntu nad stropem oraz ciężar objętościowy naziomu.
+        
+        **3. Profil Geotechniczny**  
+        Wybierz metodę definiowania parametrów gruntu (automatyczna korelacja $I_D$ / $I_L$ lub ręczne wprowadzanie oporów pobocznicy) i zdefiniuj warstwowanie.
+        
+        **4. Warunki Hydrogeologiczne**  
+        Określ poziom wody gruntowej na zewnątrz (kluczowe dla stanu UPL – woda wywołuje wypór pustego zbiornika).
+        
+        **5. Parametry Pali**  
+        Wprowadź średnicę pala $D$, długość, planowaną liczbę sztuk oraz technologię wykonania.
+        
+        **6. Ograniczenia Wykonawcze i Koszty**  
+        Ustaw parametry placu budowy oraz aktualne stawki rynkowe do wyceny kosztorysowej.
+        """)
+        
+    with tab_link:
+        st.info("Narzędzie wdrożone w środowisku chmurowym.")
+        st.link_button("Otwórz Kalkulator Posadowienia ➔", "https://posadowienie-posrednie-zbiornika.streamlit.app/")
+
+elif st.session_state.aktualna_zakladka == TAB_CPTU:
+    st.title("Analiza sondowań CPTU")
+    st.caption("CPTU · filtracja danych · SBT Robertson · litologia")
+    
+    tab_opis, tab_instrukcja, tab_link = st.tabs(["Opis Programu", "Instrukcja Obsługi", "Uruchom Aplikację"])
+    
+    with tab_opis:
+        st.subheader("Funkcje i algorytmy obliczeniowe")
+        st.markdown("""
+        Program do automatycznej ekstrakcji i interpretacji surowych danych geotechnicznych z sondowań statycznych CPTU. 
+        
+        **Kluczowe możliwości algorytmu:**
+        * **Filtracja sygnału:** Cyfrowe wygładzanie danych (algorytm średniej ruchomej) w celu eliminacji szumów.
+        * **Ekstrakcja parametrów:** Wyznaczanie rzeczywistych oporów stożka ($q_c$), tarcia na tulei ($f_s$), wskaźnika tarcia ($R_f$) oraz ciśnienia porowego ($u_2$).
+        * **Klasyfikacja SBT Robertsona:** Obliczanie bezwymiarowego wskaźnika zachowania gruntu ($I_c$).
+        * **Zestawienia statystyczne:** Generowanie czytelnych, graficznych profilów głębokościowych z kolorową identyfikacją warstw oraz obliczanie procentowego udziału miąższości.
+        """)
+        
+        st.divider()
+        if os.path.exists("screen_cptu.png"):
+            st.image("screen_cptu.png", caption="Kolorowy profil litologiczny SBT z wygładzaniem szumów", use_container_width=True)
+        
+    with tab_instrukcja:
+        st.subheader("Instrukcja obsługi")
+        st.markdown("""
+        **1. Źródło danych (Import pliku)**  
+        W lewym panelu bocznym przeciągnij i upuść surowy plik z sondy (w formacie `.txt` lub `.csv`). Aplikacja wymaga standardowych tagów geotechnicznych: `D=` (głębokość), `QC=` (opór stożka) oraz `FS=` (tarcie).
+        
+        **2. Cyfrowa Filtracja Sygnału**  
+        Za pomocą suwaka "Okno uśredniania" modyfikujesz interwał algorytmu średniej ruchomej, co pozwala uzyskać spójny i czytelny wykres profilu, eliminując szumy z aparatury.
+        
+        **3. Interpretacja Wyników**  
+        * **Profil CPTU i Litologia:** Osie prezentujące wykresy oporu stożka, tarcia, ciśnienia porowego oraz wygenerowany blok wydzieleń gruntowych.
+        * **Zestawienie Gruntów:** Tabelaryczny, sumaryczny udział objętościowy poszczególnych rodzajów gruntu.
+        """)
+        
+    with tab_link:
+        st.info("Aplikacja wdrożona w środowisku chmurowym.")
+        st.link_button("Otwórz program do analizy CPTU ➔", "https://badanie-cptu.streamlit.app/")
+
+else:
+    st.error("Błąd nawigacji.")
+    st.button("Wróć do strony głównej", on_click=ustaw_omnie)
