@@ -3,12 +3,12 @@ import base64
 import os
 
 # ==========================================
-# KONFIGURACJA STRONY
+# KONFIGURACJA STRONY (Z WYMUSZONYM JASNYM MOTYWEM)
 # ==========================================
-st.set_page_config(page_title="Damian Kubiak | Portfolio", layout="wide")
+st.set_page_config(page_title="Damian Kubiak | Portfolio", layout="wide", initial_sidebar_state="expanded")
 
 # ==========================================
-# STAŁE NAWIGACYJNE (Bezpieczne klucze bez polskich znaków)
+# STAŁE NAWIGACYJNE
 # ==========================================
 TAB_OMNIE = "omnie"
 TAB_KLIMAT = "klimat"
@@ -41,6 +41,7 @@ tlo_url = pobierz_tlo_base64(NAZWA_PLIKU)
 # ==========================================
 st.markdown("""
 <style>
+/* Wymuszenie podstawowych kolorów dla jasnego motywu niezależnie od ustawień chmury */
 :root {
     --ink: #151515;
     --muted: #666;
@@ -50,19 +51,20 @@ st.markdown("""
     --accent: #b56b35;
 }
 
+/* Główne tło i tekst aplikacji */
 .stApp {
-    color: var(--ink);
+    color: var(--ink) !important;
     background:
         radial-gradient(circle at 85% 10%, rgba(181,107,53,.10), transparent 30%),
-        linear-gradient(135deg, #f7f5ef 0%, #eeeae1 100%);
+        linear-gradient(135deg, #f7f5ef 0%, #eeeae1 100%) !important;
 }
 
 [data-testid="stAppViewContainer"] > .main {
-    background: transparent;
+    background: transparent !important;
 }
 
 header[data-testid="stHeader"] {
-    background: transparent;
+    background: transparent !important;
 }
 
 .block-container {
@@ -71,9 +73,10 @@ header[data-testid="stHeader"] {
     padding-bottom: 4rem;
 }
 
+/* Ciemny panel boczny - naprawiony dla chmury */
 [data-testid="stSidebar"] {
-    background: #171717;
-    border-right: 1px solid rgba(255,255,255,.08);
+    background-color: #171717 !important;
+    border-right: 1px solid rgba(255,255,255,.08) !important;
 }
 
 [data-testid="stSidebar"] * {
@@ -85,12 +88,14 @@ header[data-testid="stHeader"] {
     line-height: 1.45 !important;
 }
 
+/* Przyciski nawigacyjne w menu bocznym */
 [data-testid="stSidebar"] [data-testid="stButton"] > button {
     justify-content: flex-start !important;
     padding-left: 14px !important;
     border-radius: 8px !important;
     border: 1px solid rgba(255,255,255,.10) !important;
-    background: rgba(255,255,255,.06) !important;
+    background-color: rgba(255,255,255,.06) !important;
+    color: #f4f1ea !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stButton"] > button p,
@@ -98,47 +103,72 @@ header[data-testid="stHeader"] {
     text-align: left !important;
     font-size: 1rem !important;
     font-weight: 600 !important;
+    color: #f4f1ea !important;
 }
 
 h1, h2, h3 {
     letter-spacing: -0.035em;
+    color: var(--ink) !important;
 }
 
-h1 {
-    font-weight: 750 !important;
-}
+h1 { font-weight: 750 !important; }
+h2, h3 { font-weight: 700 !important; }
+p, li { line-height: 1.7; color: var(--ink) !important; }
 
-h2, h3 {
-    font-weight: 700 !important;
-}
-
-p, li {
-    line-height: 1.7;
-}
-
-.stButton > button,
-.stLinkButton > a {
+/* Stylizacja Głównych Przycisków (Zobacz Projekt) - NAPRAWA CZARNYCH PROSTOKĄTÓW */
+div[data-testid="stButton"] > button {
     border-radius: 8px !important;
-    font-weight: 650 !important;
-    min-height: 42px;
+    font-weight: 700 !important;
+    min-height: 44px !important;
+    background-color: rgba(255,255,255,0.7) !important;
+    color: #151515 !important;
+    border: 1px solid var(--line) !important;
+    transition: all 0.2s ease !important;
 }
 
+div[data-testid="stButton"] > button:hover {
+    background-color: rgba(255,255,255,1) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+
+div[data-testid="stButton"] > button p {
+    color: inherit !important;
+}
+
+/* NAPRAWA ZAKŁADEK (Tabs) W CHMURZE */
 .stTabs [data-baseweb="tab-list"] {
     gap: 8px;
     border-bottom: 1px solid var(--line);
+    background: transparent !important;
 }
 
 .stTabs [data-baseweb="tab"] {
     padding: 10px 16px;
+    background: transparent !important;
 }
 
+/* Twarde wymuszenie czarnego tekstu na zakładkach */
 .stTabs [data-baseweb="tab"] p, 
-.stTabs [data-baseweb="tab"] span {
+.stTabs [data-baseweb="tab"] span,
+.stTabs [data-baseweb="tab"] div {
     color: #1a1a1a !important; 
-    font-weight: 650 !important;
+    font-weight: 700 !important;
     font-size: 1.05rem !important;
 }
 
+/* Aktywna zakładka (podkreślenie i kolor) */
+.stTabs [aria-selected="true"] {
+    border-bottom: 2px solid var(--accent) !important;
+}
+.stTabs [aria-selected="true"] p, 
+.stTabs [aria-selected="true"] span {
+    color: var(--accent) !important;
+}
+
+
+/* Kafelki Portfolio */
 .portfolio-card {
     background: var(--card);
     border: 1px solid var(--line);
@@ -146,7 +176,7 @@ p, li {
     padding: 28px;
     box-shadow: 0 10px 35px rgba(0,0,0,.06);
     backdrop-filter: blur(8px);
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .project-kicker {
@@ -163,10 +193,11 @@ p, li {
     font-weight: 760;
     line-height: 1.12;
     margin-bottom: 10px;
+    color: var(--ink) !important;
 }
 
 .project-description {
-    color: #555;
+    color: #444 !important;
     font-size: 1rem;
     line-height: 1.65;
 }
@@ -180,7 +211,7 @@ p, li {
 }
 
 .metric-label {
-    color: #777;
+    color: #777 !important;
     font-size: .76rem;
     font-weight: 750;
     letter-spacing: .10em;
@@ -188,6 +219,7 @@ p, li {
 }
 
 .metric-value {
+    color: var(--ink) !important;
     font-size: 1.15rem;
     font-weight: 750;
     margin-top: 5px;
@@ -209,7 +241,7 @@ p, li {
 """, unsafe_allow_html=True)
 
 # ==========================================
-# ZARZĄDZANIE STANEM (Nawigacja oparta na ID)
+# ZARZĄDZANIE STANEM
 # ==========================================
 if "aktualna_zakladka" not in st.session_state:
     st.session_state.aktualna_zakladka = TAB_OMNIE
@@ -329,7 +361,7 @@ if st.session_state.aktualna_zakladka == TAB_OMNIE:
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            st.button("Zobacz projekt ➔", key="link_klimat", on_click=przejdz_do_programu, args=(TAB_KLIMAT,), use_container_width=True)
+            st.button("Zobacz projekt ➔", key="btn_klimat", on_click=przejdz_do_programu, args=(TAB_KLIMAT,), use_container_width=True)
 
         with p2:
             st.markdown("""
@@ -342,7 +374,7 @@ if st.session_state.aktualna_zakladka == TAB_OMNIE:
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            st.button("Zobacz projekt ➔", key="link_zbiornik", on_click=przejdz_do_programu, args=(TAB_ZBIORNIK,), use_container_width=True)
+            st.button("Zobacz projekt ➔", key="btn_zbiornik", on_click=przejdz_do_programu, args=(TAB_ZBIORNIK,), use_container_width=True)
 
         st.write("")
         st.write("")
@@ -359,7 +391,7 @@ if st.session_state.aktualna_zakladka == TAB_OMNIE:
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            st.button("Zobacz projekt ➔", key="link_cptu", on_click=przejdz_do_programu, args=(TAB_CPTU,), use_container_width=True)
+            st.button("Zobacz projekt ➔", key="btn_cptu", on_click=przejdz_do_programu, args=(TAB_CPTU,), use_container_width=True)
 
         with p4:
             st.markdown("""
@@ -402,8 +434,6 @@ elif st.session_state.aktualna_zakladka == TAB_KLIMAT:
         st.divider()
         if os.path.exists("screen_wiatr.png"):
             st.image("screen_wiatr.png", caption="Wizualizacja stref obciążeń na dachu", use_container_width=True)
-        else:
-            st.info("💡 Miejsce na zrzut ekranu aplikacji. Dodaj plik 'screen_wiatr.png' do folderu z portfolio.")
         
     with tab_instrukcja:
         st.subheader("Instrukcja obsługi")
@@ -412,12 +442,12 @@ elif st.session_state.aktualna_zakladka == TAB_KLIMAT:
         2. **Lokalizacja i teren:** Określ strefy klimatyczne, wysokość nad poziomem morza oraz właściwą kategorię terenu.
         3. **Parametry dodatkowe:** Skonfiguruj ewentualną attykę, płotki przeciwśniegowe i zdefiniuj współczynnik ciśnienia wewnętrznego ($C_{pi}$).
         4. **Wizualizacja (Wiatr):** Przełączając główny sterownik kierunku wiatru na górze ekranu (0° lub 90°), wygeneruj układ stref aerodynamicznych na rzucie dachu.
-        5. **Raport:** W ostatniej zakładce możesz pobrać plik `.txt`. Zestawione w nim wartości sił mogą posłużyć jako dane wejściowe do dalszego projektowania, np. w oprogramowaniu MES, po ich uprzedniej weryfikacji inżynierskiej.
+        5. **Raport:** W ostatniej zakładce możesz pobrać plik `.txt`. Zestawione w nim wartości sił mogą posłużyć jako dane wejściowe do dalszego projektowania.
         """)
         
     with tab_link:
         st.info("Aplikacja udostępniona w chmurze.")
-        st.link_button("Otwórz Generator Obciążeń Klimatycznych", "https://generator-klimatyczne.streamlit.app/")
+        st.link_button("Otwórz Generator Obciążeń Klimatycznych ➔", "https://generator-klimatyczne.streamlit.app/")
 
 elif st.session_state.aktualna_zakladka == TAB_ZBIORNIK:
     st.title("Posadowienie Pośrednie Zbiornika")
@@ -428,21 +458,19 @@ elif st.session_state.aktualna_zakladka == TAB_ZBIORNIK:
     with tab_opis:
         st.subheader("Funkcje i algorytmy obliczeniowe")
         st.markdown("""
-        Zaawansowany system inżynierski przeznaczony do kompleksowego projektowania i optymalizacji głębokiego posadowienia podziemnych zbiorników retencyjnych w trudnych warunkach gruntowych (w tym w gruntach słabonośnych i organicznych).
+        Zaawansowany system inżynierski przeznaczony do kompleksowego projektowania i optymalizacji głębokiego posadowienia podziemnych zbiorników retencyjnych w trudnych warunkach gruntowych.
         
         **Kluczowe moduły i funkcjonalności:**
-        * **Analiza Stanów Granicznych:** Weryfikacja nośności i stateczności w stanach **UPL** (utrata stateczności ogólnej/wypór wodny dla pustego zbiornika), **GEO** (nośność podłoża i pali) oraz **SGU** (kontrola dopuszczalnych osiadań).
+        * **Analiza Stanów Granicznych:** Weryfikacja nośności i stateczności w stanach **UPL** (utrata stateczności ogólnej/wypór wodny), **GEO** (nośność podłoża i pali) oraz **SGU**.
         * **Projektowanie Żelbetu i Zbrojenia:** Dobór średnic prętów podłużnych i weryfikacja nośności przekrojów pali.
-        * **Moduł Kosztorysowy:** Automatyczna wycena materiałów i robocizny (beton palowy, stal zbrojeniowa, kruszywo platformy roboczej, wiercenie pali i skuwanie głowic).
-        * **Moduł Optymalizacji Rozkładu Posadowienia:** Automatyczne testowanie kombinacji siatek pali przy zachowaniu normowych odstępów ($3D$) oraz wprowadzonych z panelu bocznego ograniczeń skrajni palownicy.
-        * **Generator Raportów Obliczeniowych:** Tworzenie szczegółowych, czytelnych not obliczeniowych z rozpisaniem wzorów normowych i podstawieniem wartości liczbowych (podpisanych jako dokumentacja projektowa studenta ZUT).
+        * **Moduł Kosztorysowy:** Automatyczna wycena materiałów i robocizny.
+        * **Moduł Optymalizacji Rozkładu Posadowienia:** Automatyczne testowanie kombinacji siatek pali przy zachowaniu normowych odstępów ($3D$) oraz ograniczeń skrajni palownicy.
+        * **Generator Raportów Obliczeniowych:** Tworzenie szczegółowych not obliczeniowych z rozpisaniem wzorów normowych (dokumentacja inżynierska ZUT).
         """)
         
         st.divider()
         if os.path.exists("screen_zbiornik.png"):
             st.image("screen_zbiornik.png", caption="Raport obliczeniowy i wyniki optymalizacji siatki pali", use_container_width=True)
-        else:
-            st.info("💡 Miejsce na zrzut ekranu aplikacji. Dodaj plik 'screen_zbiornik.png' do folderu z portfolio.")
         
     with tab_instrukcja:
         st.subheader("Instrukcja wprowadzania danych (Panel Boczny)")
@@ -450,39 +478,27 @@ elif st.session_state.aktualna_zakladka == TAB_ZBIORNIK:
         Szczegółowy opis konfiguracji parametrów w lewym panelu bocznym aplikacji:
         
         **1. Parametry geometryczne zbiornika**  
-        Wprowadź zewnętrzne gabaryty (długość L, szerokość B, wysokość całkowita H), grubość ścian i dna oraz ciężar objętościowy betonu konstrukcyjnego. Parametry te definiują sztywność i ciężar własny zbiornika.
+        Wprowadź zewnętrzne gabaryty, grubość ścian i dna oraz ciężar objętościowy betonu konstrukcyjnego.
         
         **2. Zagłębienie i Naziom**  
-        Zdefiniuj grubość warstwy gruntu nad stropem oraz ciężar objętościowy naziomu (dodatkowe obciążenie pionowe stabilizujące zbiornik).
+        Zdefiniuj grubość warstwy gruntu nad stropem oraz ciężar objętościowy naziomu.
         
         **3. Profil Geotechniczny**  
-        Wybierz metodę definiowania parametrów gruntu (automatyczna korelacja z parametrów wiodących $I_D$ / $I_L$ lub ręczne wprowadzanie oporów pobocznicy i podstawy) i zdefiniuj warstwowanie podłoża.
+        Wybierz metodę definiowania parametrów gruntu (automatyczna korelacja $I_D$ / $I_L$ lub ręczne wprowadzanie oporów pobocznicy) i zdefiniuj warstwowanie.
         
         **4. Warunki Hydrogeologiczne**  
-        Określ poziom wody gruntowej na zewnątrz (mierzony od dna). Kluczowe dla stanu UPL – woda wywołuje wypór pustego zbiornika, zmieniając kierunek pracy pali na wyciąganie.
+        Określ poziom wody gruntowej na zewnątrz (kluczowe dla stanu UPL – woda wywołuje wypór pustego zbiornika).
         
         **5. Parametry Pali**  
-        Wprowadź średnicę pala $D$, jego całkowitą długość, planowaną liczbę sztuk oraz wybierz technologię wykonania z listy rozwijanej.
+        Wprowadź średnicę pala $D$, długość, planowaną liczbę sztuk oraz technologię wykonania.
         
-        **6. Stany Graniczne Użytkowalności (SGU)**  
-        Zdefiniuj dopuszczalne osiadanie maksymalne ($s_{max}$) w milimetrach, którego konstrukcja nie może przekroczyć.
-        
-        **7. Parametry Zbrojenia**  
-        Określ granicę plastyczności stali $f_{yk}$ oraz średnicę prętów podłużnych zbrojenia pala.
-        
-        **8. Ograniczenia Wykonawcze i Koszty**  
-        Ustaw parametry placu budowy oraz aktualne stawki rynkowe do wyceny kosztorysowej:
-        * *Wymagana skrajnia robocza palownicy* (odstęp osi narzędzia od krawędzi wykopu).
-        * *Margines platformy roboczej* oraz grubość warstwy kruszywa i powierzchnia drogi dojazdowej.
-        * *Stawki cenowe:* koszt betonu z pompą, stali zbrojeniowej, kruszywa z wbudowaniem, wiercenia 1 mb pala oraz skuwania głowic.
-        
-        **Interpretacja wyników (Zakładki główne):**  
-        Po wprowadzeniu danych, wyniki możesz analizować w dedykowanych zakładkach ekranu głównego: sprawdzić stany UPL, GEO, SGU, podejrzeć rysunki przekroju ($A-A$) i rzutu płyty, przeanalizować koszty w *Kosztorysie*, uruchomić *Moduł Optymalizacji* oraz wygenerować oficjalny, w pełni rozpisany *Raport* obliczeniowy.
+        **6. Ograniczenia Wykonawcze i Koszty**  
+        Ustaw parametry placu budowy oraz aktualne stawki rynkowe do wyceny kosztorysowej.
         """)
         
     with tab_link:
         st.info("Narzędzie wdrożone w środowisku chmurowym.")
-        st.link_button("Otwórz Kalkulator Posadowienia", "https://posadowienie-posrednie-zbiornika.streamlit.app/")
+        st.link_button("Otwórz Kalkulator Posadowienia ➔", "https://posadowienie-posrednie-zbiornika.streamlit.app/")
 
 elif st.session_state.aktualna_zakladka == TAB_CPTU:
     st.title("Analiza sondowań CPTU")
@@ -493,41 +509,37 @@ elif st.session_state.aktualna_zakladka == TAB_CPTU:
     with tab_opis:
         st.subheader("Funkcje i algorytmy obliczeniowe")
         st.markdown("""
-        Program do automatycznej ekstrakcji i interpretacji surowych danych geotechnicznych z sondowań statycznych CPTU. Narzędzie przetwarza pliki tekstowe bezpośrednio z maszyn pomiarowych i generuje kompleksowy obraz litologii podłoża.
+        Program do automatycznej ekstrakcji i interpretacji surowych danych geotechnicznych z sondowań statycznych CPTU. 
         
         **Kluczowe możliwości algorytmu:**
-        * **Filtracja sygnału:** Cyfrowe wygładzanie danych (algorytm średniej ruchomej) w celu eliminacji szumów i wibracji pochodzących od żerdzi podczas wciskania w grunt.
+        * **Filtracja sygnału:** Cyfrowe wygładzanie danych (algorytm średniej ruchomej) w celu eliminacji szumów.
         * **Ekstrakcja parametrów:** Wyznaczanie rzeczywistych oporów stożka ($q_c$), tarcia na tulei ($f_s$), wskaźnika tarcia ($R_f$) oraz ciśnienia porowego ($u_2$).
-        * **Klasyfikacja SBT Robertsona:** Obliczanie bezwymiarowego wskaźnika zachowania gruntu ($I_c$) opierającego się na nieliniowej funkcji oporów i tarcia, pozwalające na bezrdzeniowe rozpoznanie rodzaju gruntu.
-        * **Zestawienia statystyczne:** Generowanie czytelnych, graficznych profilów głębokościowych z kolorową identyfikacją warstw (np. torfy, gliny, piaski) oraz obliczanie procentowego udziału miąższości poszczególnych gruntów.
+        * **Klasyfikacja SBT Robertsona:** Obliczanie bezwymiarowego wskaźnika zachowania gruntu ($I_c$).
+        * **Zestawienia statystyczne:** Generowanie czytelnych, graficznych profilów głębokościowych z kolorową identyfikacją warstw oraz obliczanie procentowego udziału miąższości.
         """)
         
         st.divider()
         if os.path.exists("screen_cptu.png"):
             st.image("screen_cptu.png", caption="Kolorowy profil litologiczny SBT z wygładzaniem szumów", use_container_width=True)
-        else:
-            st.info("💡 Miejsce na zrzut ekranu aplikacji. Dodaj plik 'screen_cptu.png' do folderu z portfolio.")
         
     with tab_instrukcja:
-        st.subheader("Instrukcja obsługi (Panel Boczny i Ekran Główny)")
+        st.subheader("Instrukcja obsługi")
         st.markdown("""
         **1. Źródło danych (Import pliku)**  
-        W lewym panelu bocznym znajduje się pole importu. Przeciągnij i upuść tam surowy plik z sondy (w formacie `.txt` lub `.csv`). Aplikacja wymaga, aby w pliku znajdowały się standardowe tagi geotechniczne: `D=` (głębokość), `QC=` (opór stożka) oraz `FS=` (tarcie).
+        W lewym panelu bocznym przeciągnij i upuść surowy plik z sondy (w formacie `.txt` lub `.csv`). Aplikacja wymaga standardowych tagów geotechnicznych: `D=` (głębokość), `QC=` (opór stożka) oraz `FS=` (tarcie).
         
         **2. Cyfrowa Filtracja Sygnału**  
-        Poniżej pola importu znajduje się suwak "Okno uśredniania". Często fizyczne odczyty z czujników są zaszumione z powodu drgań aparatury podczas wciskania żerdzi. Przesuwając suwak, modyfikujesz interwał algorytmu średniej ruchomej, co pozwala uzyskać gładki, spójny i czytelny wykres profilu.
+        Za pomocą suwaka "Okno uśredniania" modyfikujesz interwał algorytmu średniej ruchomej, co pozwala uzyskać spójny i czytelny wykres profilu, eliminując szumy z aparatury.
         
-        **3. Interpretacja Wyników (Zakładki ekranu głównego)**  
-        * **Profil CPTU i Litologia:** Główna przestrzeń robocza. Znajdziesz tu 5 osi. Prezentują one wykresy oporu stożka, tarcia, wskaźnika $R_f$, ciśnienia porowego $u_2$ oraz wygenerowany na ich podstawie logarytmiczny blok wydzieleń gruntowych wraz z pełną legendą litologiczną.
-        * **Zestawienie Gruntów:** Zakładka prezentująca w formie tabelarycznej obliczony, sumaryczny udział objętościowy (wyrażony w procentach) poszczególnych rodzajów gruntu w obrębie danego otworu.
-        * **Surowe Dane:** Pełen zestaw przetworzonych parametrów fizycznych wyliczonych interwał po interwale, gotowy do szczegółowej weryfikacji.
+        **3. Interpretacja Wyników**  
+        * **Profil CPTU i Litologia:** Osie prezentujące wykresy oporu stożka, tarcia, ciśnienia porowego oraz wygenerowany blok wydzieleń gruntowych.
+        * **Zestawienie Gruntów:** Tabelaryczny, sumaryczny udział objętościowy poszczególnych rodzajów gruntu.
         """)
         
     with tab_link:
         st.info("Aplikacja wdrożona w środowisku chmurowym.")
-        st.link_button("Otwórz program do analizy CPTU", "https://badanie-cptu.streamlit.app/")
+        st.link_button("Otwórz program do analizy CPTU ➔", "https://badanie-cptu.streamlit.app/")
 
 else:
-    # System awaryjny - uchroni przed białym ekranem w razie błędów stanu
-    st.error(f"Błąd nawigacji. Nie rozpoznano zakładki: {st.session_state.aktualna_zakladka}")
+    st.error("Błąd nawigacji.")
     st.button("Wróć do strony głównej", on_click=ustaw_omnie)
